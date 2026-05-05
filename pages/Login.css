@@ -1,0 +1,73 @@
+.login-screen {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0f1f3d 0%, #1e3a5f 55%, #0ea5e9 100%);
+  display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 24px;
+}
+.login-card {
+  background: rgba(255,255,255,0.07); backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 24px;
+  padding: 44px 40px; width: 480px; max-width: 100%; position: relative; overflow: hidden;
+}
+.login-card::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(59,130,246,0.18); pointer-events: none;
+}
+
+.login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.login-brand-icon { width: 44px; height: 44px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.login-brand-name { font-family: 'Instrument Serif', serif; font-size: 22px; color: white; line-height: 1.2; }
+.login-brand-sub  { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+.login-title { font-size: 26px; font-weight: 600; color: white; margin-bottom: 6px; }
+.login-sub   { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 22px; min-height: 34px; }
+
+/* ROLE CARDS */
+.login-role-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 24px; }
+.role-card {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 6px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.role-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+.role-card.active { background: var(--accent); border-color: var(--accent); }
+.role-card.patient-card.active { background: var(--teal); border-color: var(--teal); }
+.role-icon { font-size: 20px; }
+.role-name { font-size: 12px; font-weight: 600; color: white; }
+.role-desc { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+.role-card.active .role-desc { color: rgba(255,255,255,0.8); }
+
+/* FIELDS */
+.field-wrap { margin-bottom: 16px; }
+.field-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+.field-input {
+  width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px; padding: 12px 16px; font-size: 14px; color: white;
+  font-family: 'DM Sans', sans-serif; outline: none; transition: all 0.2s;
+}
+.field-input::placeholder { color: rgba(255,255,255,0.3); }
+.field-input:focus { border-color: var(--accent-mid); background: rgba(255,255,255,0.15); }
+
+/* PATIENT NOTICE */
+.patient-notice {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 20px;
+  font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5;
+}
+.patient-notice span { font-size: 18px; flex-shrink: 0; }
+
+/* BUTTON */
+.login-btn {
+  width: 100%; padding: 14px; background: var(--accent); border: none; border-radius: 12px;
+  color: white; font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: all 0.2s; margin-top: 4px;
+}
+.login-btn:hover { background: #2563eb; }
+.login-btn:active { transform: scale(0.98); }
+.login-btn.patient-btn { background: var(--teal); }
+.login-btn.patient-btn:hover { background: #0284c7; }
+
+.login-footer { text-align: center; margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.3); }

@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:       #0f1f3d;
+  --accent:     #3b82f6;
+  --accent-soft:#dbeafe;
+  --accent-mid: #60a5fa;
+  --teal:       #0ea5e9;
+  --emerald:    #10b981;
+  --amber:      #f59e0b;
+  --rose:       #f43f5e;
+  --violet:     #8b5cf6;
+  --surface:    #f8fafc;
+  --card:       #ffffff;
+  --border:     #e2e8f0;
+  --text:       #0f172a;
+  --muted:      #64748b;
+  --light:      #94a3b8;
+  --sidebar-w:  240px;
+  --navbar-h:   64px;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); height: 100vh; overflow: hidden; }
+
+/* Patient portal needs its own scroll — portal-screen is position:fixed with overflow-y:auto */
+body.portal-open { overflow: hidden; } /* still blocked at body level — portal-screen handles it */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── PAGE LAYOUT ── */
+.page-enter  { animation: fadeIn 0.25s ease; }
+.page-header { margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; }
+.page-title  { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--text); }
+.page-sub    { font-size: 13px; color: var(--muted); margin-top: 3px; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── CARD ── */
+.card        { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.card-title  { font-size: 14px; font-weight: 600; color: var(--text); }
+.card-action { font-size: 12px; color: var(--accent); cursor: pointer; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.data-table td { padding: 12px; font-size: 13px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #f8fafc; }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge.pending   { background: #fef9c3; color: #a16207; }
+.badge.confirmed { background: #dcfce7; color: #15803d; }
+.badge.completed { background: #dbeafe; color: #1d4ed8; }
+.badge.cancelled { background: #fee2e2; color: #b91c1c; }
+.badge.active    { background: #dcfce7; color: #15803d; }
+
+/* ── PATIENT CELL ── */
+.patient-cell { display: flex; align-items: center; gap: 9px; }
+.p-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; flex-shrink: 0; }
+.p-name   { font-size: 13px; font-weight: 500; }
+.p-id     { font-size: 11px; color: var(--muted); }
+
+/* ── BUTTONS ── */
+.btn          { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 9px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary  { background: var(--accent); color: white; }
+.btn-primary:hover  { background: #2563eb; }
+.btn-outline  { background: white; color: var(--text); border: 1px solid var(--border); }
+.btn-outline:hover  { background: var(--surface); }
+.btn-danger   { background: #fee2e2; color: var(--rose); border: 1px solid #fecaca; }
+.btn-danger:hover   { background: #fecaca; }
+.btn-success  { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.btn-success:hover  { background: #bbf7d0; }
+
+/* ── LAYOUTS ── */
+.two-col   { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 500; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--card); border-radius: 18px; padding: 28px; width: 480px; max-width: 94vw; transform: scale(0.96); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
+.modal-overlay.open .modal { transform: scale(1); }
+.modal-title   { font-family: 'Instrument Serif', serif; font-size: 22px; margin-bottom: 6px; }
+.modal-sub     { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+/* ── FORMS ── */
+.form-group  { margin-bottom: 16px; }
+.form-label  { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
+.form-input, .form-select { width: 100%; border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text); background: white; outline: none; transition: border-color 0.2s; }
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-row    { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.divider     { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ── MODAL CLOSE BUTTON ── */
+.modal-close-x {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.15s;
+  padding: 4px;
+}
+.modal-close-x:hover {
+  color: var(--text);
+}
