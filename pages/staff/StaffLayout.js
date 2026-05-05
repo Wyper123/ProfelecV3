@@ -255,7 +255,6 @@ function StaffAppointments({ user }) {
 function StaffPatients({ user }) {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const { showAlert } = useModal();
 
   useEffect(() => {
     const all = getPatients();
@@ -313,7 +312,7 @@ function StaffPatients({ user }) {
 
       {selectedPatient && (
         <div className="modal-overlay open" onClick={closeModal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ width: 560 }}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ width: 560 }}>
             <button className="modal-close-x" onClick={closeModal}>✕</button>
             <div className="modal-title">{selectedPatient.name}</div>
             <div className="modal-sub">{selectedPatient.email}</div>
@@ -350,9 +349,7 @@ function StaffPatients({ user }) {
             </div>
 
             <div className="modal-actions">
-              <button className="btn btn-outline" onClick={closeModal}>
-                Close
-              </button>
+              <button className="btn btn-outline" onClick={closeModal}>Close</button>
             </div>
           </div>
         </div>
@@ -380,7 +377,6 @@ function StaffSchedule({ user }) {
     setAppointments(all);
   }, [user]);
 
-  // Group by day of week
   const grouped = {
     mon: [],
     tue: [],
@@ -392,7 +388,7 @@ function StaffSchedule({ user }) {
   appointments.forEach(a => {
     const d = new Date(a.date);
     if (isNaN(d.getTime())) return;
-    const dayIndex = d.getDay(); // 0=Sun, 1=Mon...
+    const dayIndex = d.getDay();
     const dayMap = { 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri" };
     const key = dayMap[dayIndex];
     if (key) {
@@ -435,37 +431,124 @@ function StaffSchedule({ user }) {
   );
 }
 
-// ========== PROFILE ==========
+// ========== PROFILE (ENHANCED – centered, more fields, persistent) ==========
 function StaffProfile({ user }) {
+  const storageKey = `staff_profile_${user.email}`;
+  const defaultProfile = {
+    phone: "",
+    specialty: "",
+    licenseNumber: "",
+    yearsOfExperience: "",
+    consultationFee: "",
+  };
+
+  const [profile, setProfile] = useState(() => {
+    const stored = localStorage.getItem(storageKey);
+    return stored ? { ...defaultProfile, ...JSON.parse(stored) } : defaultProfile;
+  });
+  const { showAlert } = useModal();
+
+  const handleChange = (field, value) => {
+    setProfile(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    localStorage.setItem(storageKey, JSON.stringify(profile));
+    showAlert("Profile updated successfully.", "Success");
+  };
+
   return (
-    <div className="page-enter">
-      <div className="page-header">
-        <div>
-          <div className="page-title">My Profile</div>
-          <div className="page-sub">Your account details</div>
-        </div>
-        <button className="btn btn-primary">Save Changes</button>
-      </div>
-      <div className="card" style={{ maxWidth: 540 }}>
-        <div className="profile-avatar-row">
-          <div className="profile-avatar" style={{ background: "#0ea5e9" }}>
-            {user.initials}
-          </div>
+    <div className="page-enter" style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ width: "100%", maxWidth: 620 }}>
+        <div className="page-header">
           <div>
-            <div style={{ fontSize: 18, fontWeight: 600 }}>{user.name}</div>
-            <div style={{ fontSize: 13, color: "var(--muted)" }}>
-              Doctor · MediCare Hospital
-            </div>
+            <div className="page-title">My Profile</div>
+            <div className="page-sub">Your professional details</div>
           </div>
+          <button className="btn btn-primary" onClick={handleSave}>
+            Save Changes
+          </button>
         </div>
-        <div className="settings-divider" />
-        <div className="form-group">
-          <label className="form-label">Email</label>
-          <input className="form-input" defaultValue={user.email} />
-        </div>
-        <div className="form-group">
-          <label className="form-label">Phone</label>
-          <input className="form-input" placeholder="+63 9XX XXX XXXX" />
+
+        <div className="card">
+          {/* Avatar and Identity */}
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <div className="profile-avatar" style={{ background: "#0ea5e9", margin: "0 auto 12px auto", width: 64, height: 64, fontSize: 26, display: "flex", alignItems: "center", justifyContent: "center", color: "white", borderRadius: 18 }}>
+              {user.initials}
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 600 }}>{user.name}</div>
+            <div style={{ fontSize: 13, color: "var(--muted)" }}>Doctor · MediCare Hospital</div>
+          </div>
+
+          <div className="settings-divider" />
+
+          {/* Editable Fields */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div className="form-group">
+              <label className="form-label">Email</label>
+              <input
+                className="form-input"
+                value={user.email}
+                disabled
+                style={{ background: "var(--surface)", color: "var(--muted)" }}
+              />
+              <p style={{ fontSize: 11, color: "var(--light)", marginTop: 4 }}>
+                Cannot be changed (linked to your login)
+              </p>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Phone</label>
+                <input
+                  className="form-input"
+                  value={profile.phone}
+                  onChange={e => handleChange("phone", e.target.value)}
+                  placeholder="+63 9XX XXX XXXX"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Specialty</label>
+                <input
+                  className="form-input"
+                  value={profile.specialty}
+                  onChange={e => handleChange("specialty", e.target.value)}
+                  placeholder="e.g., Cardiology"
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">License Number</label>
+                <input
+                  className="form-input"
+                  value={profile.licenseNumber}
+                  onChange={e => handleChange("licenseNumber", e.target.value)}
+                  placeholder="PRC-12345"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Years of Experience</label>
+                <input
+                  className="form-input"
+                  type="number"
+                  min="0"
+                  value={profile.yearsOfExperience}
+                  onChange={e => handleChange("yearsOfExperience", e.target.value)}
+                  placeholder="e.g., 12"
+                />
+              </div>
+            </div>
+
+            
+          </div>
+
+          <div className="settings-divider" />
+
+          <p style={{ fontSize: 12, color: "var(--muted)", textAlign: "center" }}>
+            Your profile details are stored locally on this device. They will be retained even after logging out.
+          </p>
         </div>
       </div>
     </div>
